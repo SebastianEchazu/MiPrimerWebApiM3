@@ -21,16 +21,23 @@ namespace MiPrimerWebApiM3.Controllers
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet("Listado")]
         public ActionResult<IEnumerable<Autor>> Get()
         {
-            return context.Autores.ToList();
+            return context.Autores.Include(x => x.Libros).ToList();
         }
+
+        [HttpGet("Primer")]
+        public ActionResult<Autor> GetPrimerAutor()
+        {
+            return context.Autores.FirstOrDefault();
+        }
+
 
         [HttpGet("{id}", Name = "ObtenerAutor")]
         public ActionResult<Autor> Get(int id)
         {
-            var autor = context.Autores.FirstOrDefault(x => x.Id == id);
+            var autor = context.Autores.Include(x => x.Libros).FirstOrDefault(x => x.Id == id);
 
             if (autor == null)
             {
